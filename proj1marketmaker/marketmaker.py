@@ -43,8 +43,7 @@ class MarketMaker:
         return self.cash + self.inventory * current_price
     def plot_results(self, price_path):
         pnl_path = []
-    for price in price_path:
-            pnl = self.calculate_pnl(price)
+        for price in price_path:
             plt.figure(figsize=(12, 6))
             plt.subplot(2, 1, 1)
             plt.plot(price_path, label='Price')
@@ -65,3 +64,13 @@ class MarketMaker:
         elif self.inventory < -self.max_inventory:
             return False # Stop offering 
         return True # Continue quoting
+    
+# Example usage
+mm = MarketMaker(spread=1)
+mm.simulate_trading(price_path)
+current_price = price_path[-1]
+pnl = mm.calculate_pnl(current_price)
+print(f'Final Inventory: {mm.inventory}')
+print(f'Final Cash: {mm.cash}')
+print(f'Final PnL: {pnl}')
+mm.plot_results(price_path)
