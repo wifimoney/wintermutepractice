@@ -9,7 +9,10 @@ def generate_price_path(start_price=100, num_steps=1000, mu=0, sigma=1):
     price_path = start_price + np.cumsum(returns)
     return price_path   
 price_path = generate_price_path()
-plt.plot(price_path)
+plt.plot(price_path, label='Mid Price', color='blue')
+plt.plot(price_path - 1, label='Bid', color='green')
+plt.plot(price_path + 1, label='Ask', color='red')
+plt.legend()    
 plt.title('Simulated Price Path')
 plt.xlabel('Time Steps')
 plt.ylabel('Price')
@@ -23,6 +26,7 @@ class MarketMaker:
         self.cash = 0
         self.trades = []
         self.spread = spread
+        self.max_inventory = 10
     def quote(self, mid_price):
             bid = mid_price - self.spread / 2
             ask = mid_price + self.spread / 2
@@ -43,21 +47,24 @@ class MarketMaker:
         return self.cash + self.inventory * current_price
     def plot_results(self, price_path):
         pnl_path = []
-        for price in price_path:
-            plt.figure(figsize=(12, 6))
-            plt.subplot(2, 1, 1)
-            plt.plot(price_path, label='Price')
-            plt.title('Price Path')
-            plt.xlabel('Time Steps')
-            plt.ylabel('Price')
-            plt.legend()
-            plt.subplot(2, 1, 2)
-            plt.title('PnL Path')
-            plt.xlabel('Time Steps')
-            plt.ylabel('PnL')
-            plt.legend()
-            plt.tight_layout()
-            plt.show()      
+        for price in price_path:                    # loop builds data
+            pnl = self.calculate_pnl(price)
+            pnl_path.append(pnl)
+        plt.figure(figsize=(12, 6))                 # everything below is AFTER the loop
+        plt.subplot(2, 1, 1)
+        plt.plot(price_path, label='Price')
+        plt.title('Price Path')
+        plt.xlabel('Time Steps')
+        plt.ylabel('Price')
+        plt.legend()
+        plt.subplot(2, 1, 2)
+        plt.plot(pnl_path, label='PnL', color='orange')   # this goes on subplot 2
+        plt.title('PnL Path')
+        plt.xlabel('Time Steps')
+        plt.ylabel('PnL')
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
     def max_inventory_check(self, price):
         if self.inventory >= self.max_inventory:
             return False # Stop bidding
