@@ -28,14 +28,14 @@ class MarketMaker:
             ask = mid_price + self.spread / 2
             return bid, ask
     def simulate_trading(self, price_path):
-        for i in range(len(price_path) - 1):
-            bid, ask = self.quote(price_path[i])
-            next_price = price_path[i + 1]
-            if next_price <= bid: # Buy at bid
+            for i in range(len(price_path) - 1):
+                bid, ask = self.quote(price_path[i])
+                next_price = price_path[i + 1]
+                if next_price <= bid: # Buy at bid
                     self.inventory += 1
                     self.cash -= bid
                     self.trades.append(('buy', bid))
-            elif next_price >= ask: # Sell at ask
+                elif next_price >= ask: # Sell at ask
                     self.inventory -= 1
                     self.cash += ask
                     self.trades.append(('sell', ask))
