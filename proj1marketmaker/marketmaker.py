@@ -1,9 +1,3 @@
-## Step 4 — PnL calculation**
-## Total PnL = cash + (inventory × current price). Track this at every step, plot it alongside price and inventory.
-
-## Step 5 — Inventory limits**
-## Add a `max_inventory` parameter. If you're too long, stop bidding. Too short, stop offering. Run it and compare PnL to the version without limits.
-
 ## **Step 1 — Price simulator**
 ## Write a function that generates a random walk. Start with `numpy`, use `np.random.normal()` for returns, and `np.cumsum()` to build a price path. Get comfortable plotting it with `matplotlib`.
 import numpy as np
@@ -48,3 +42,30 @@ def simulate_trading(self, price_path):
             self.cash += ask
             self.trades.append(('sell', ask))
 
+## Step 4 — PnL calculation**
+## Total PnL = cash + (inventory × current price). Track this at every step, plot it alongside price and inventory.
+def calculate_pnl(self, current_price):
+    return self.cash + self .inventory & current_price
+def plot_results(self, price_path):
+    pnl_path = []
+    for price in price_path:
+        pnl = self.calculate_pnl(price)
+        pnl_path.append(pnl)
+        plt.figure(figsize=(12, 6))
+        plt.subplot(2, 1, 1)
+        plt.plot(price_path, label='Price')
+        plt.title('Price Path')
+        plt.xlabel('Time Steps')
+        plt.ylabel('Price')
+        plt.legend()
+        plt.subplot(2, 1, 2)
+        plt.plot(pnl_path, label='PnL', color='orange')
+        plt.title('PnL Path')
+        plt.xlabel('Time Steps')
+        plt.ylabel('PnL')
+        plt.legend()
+        plt.tight_layout()
+        plt.show()      
+
+## Step 5 — Inventory limits**
+## Add a `max_inventory` parameter. If you're too long, stop bidding. Too short, stop offering. Run it and compare PnL to the version without limits.
