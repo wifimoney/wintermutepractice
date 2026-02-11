@@ -3,7 +3,6 @@
 ## Write a function that generates a random walk. Start with `numpy`, use `np.random.normal()` for returns, and `np.cumsum()` to build a price path. Get comfortable plotting it with `matplotlib`.
 import numpy as np
 import matplotlib.pyplot as plt
-import numpy.cumsum as cumsum
 
 def generate_price_path(start_price=100, num_steps=1000, mu=0, sigma=1):
     returns = np.random.normal(mu, sigma, num_steps)
@@ -29,47 +28,40 @@ class MarketMaker:
             ask = mid_price + self.spread / 2
             return bid, ask
     def simulate_trading(self, price_path):
-            for price in price_path:
-                bid, ask = self.quote(price)
-                if price <= bid: # Buy at bid
+        for i in range(len(price_path) - 1):
+            bid, ask = self.quote(price_path[i])
+            next_price = price_path[i + 1]
+            if next_price <= bid: # Buy at bid
                     self.inventory += 1
                     self.cash -= bid
                     self.trades.append(('buy', bid))
-                elif price >= ask: # Sell at ask
+            elif next_price >= ask: # Sell at ask
                     self.inventory -= 1
                     self.cash += ask
                     self.trades.append(('sell', ask))
-
-## Step 4 — PnL calculation**
-## Total PnL = cash + (inventory × current price). Track this at every step, plot it alongside price and inventory.
-def calculate_pnl(self, current_price):
-    return self.cash + self.inventory * current_price
-def plot_results(self, price_path):
-    pnl_path = []
+    def calculate_pnl(self, current_price):
+        return self.cash + self.inventory * current_price
+    def plot_results(self, price_path):
+        pnl_path = []
     for price in price_path:
-        pnl = self.calculate_pnl(price)
-        pnl_path.append(pnl)
-        plt.figure(figsize=(12, 6))
-        plt.subplot(2, 1, 1)
-        plt.plot(price_path, label='Price')
-        plt.title('Price Path')
-        plt.xlabel('Time Steps')
-        plt.ylabel('Price')
-        plt.legend()
-        plt.subplot(2, 1, 2)
-        plt.plot(pnl_path, label='PnL', color='orange')
-        plt.title('PnL Path')
-        plt.xlabel('Time Steps')
-        plt.ylabel('PnL')
-        plt.legend()
-        plt.tight_layout()
-        plt.show()      
-
-## Step 5 — Inventory limits**
-## Add a `max_inventory` parameter. If you're too long, stop bidding. Too short, stop offering. Run it and compare PnL to the version without limits.
-def max_inventory_check(self, price):
-    if self.inventory >= self.max_inventory:
-        return False # Stop bidding
-    elif self.inventory < -self.max_inventory:
-        return False # Stop offering 
-    return True # Continue quoting
+            pnl = self.calculate_pnl(price)
+            plt.figure(figsize=(12, 6))
+            plt.subplot(2, 1, 1)
+            plt.plot(price_path, label='Price')
+            plt.title('Price Path')
+            plt.xlabel('Time Steps')
+            plt.ylabel('Price')
+            plt.legend()
+            plt.subplot(2, 1, 2)
+            plt.title('PnL Path')
+            plt.xlabel('Time Steps')
+            plt.ylabel('PnL')
+            plt.legend()
+            plt.tight_layout()
+            plt.show()      
+    def max_inventory_check(self, price):
+        if self.inventory >= self.max_inventory:
+            return False # Stop bidding
+        elif self.inventory < -self.max_inventory:
+            return False # Stop offering 
+        return True # Continue quoting
