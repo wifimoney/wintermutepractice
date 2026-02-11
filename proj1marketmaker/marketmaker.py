@@ -1,4 +1,5 @@
-## **Step 1 — Price simulator**
+## Market Maker Simulation
+## Step 1 — Price simulator
 ## Write a function that generates a random walk. Start with `numpy`, use `np.random.normal()` for returns, and `np.cumsum()` to build a price path. Get comfortable plotting it with `matplotlib`.
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,37 +16,34 @@ plt.xlabel('Time Steps')
 plt.ylabel('Price')
 plt.show()
 
-## Step 2 — MarketMaker class**
+## Step 2 + 3 — MarketMaker class + Fill logic
 ## Give it three pieces of state: `inventory`, `cash`, and a list of `trades`. Then write a method that takes a mid price and returns a bid and an ask (just mid ± some fixed spread).
 class MarketMaker:
-    def _init_(self, spread=1):
+    def __init__(self, spread=1):
         self.inventory = 0
         self.cash = 0
         self.trades = []
         self.spread = spread
-        def quote(self, mid_price):
+    def quote(self, mid_price):
             bid = mid_price - self.spread / 2
             ask = mid_price + self.spread / 2
             return bid, ask
-        
-##**Step 3 — Fill logic**
-##Loop through your price series. At each step, post quotes, then check if the next price crossed your bid (you buy) or ask (you sell). Update inventory and cash accordingly.
-def simulate_trading(self, price_path):
-    for price in price_path:
-        bid, ask = self.quote(price)
-        if price <= bid: # Buy at bid
-            self.inventory += 1
-            self.cash -= bid
-            self.trades.append(('buy', bid))
-        elif price >= ask: # Sell at ask
-            self.inventory -= 1
-            self.cash += ask
-            self.trades.append(('sell', ask))
+    def simulate_trading(self, price_path):
+            for price in price_path:
+                bid, ask = self.quote(price)
+                if price <= bid: # Buy at bid
+                    self.inventory += 1
+                    self.cash -= bid
+                    self.trades.append(('buy', bid))
+                elif price >= ask: # Sell at ask
+                    self.inventory -= 1
+                    self.cash += ask
+                    self.trades.append(('sell', ask))
 
 ## Step 4 — PnL calculation**
 ## Total PnL = cash + (inventory × current price). Track this at every step, plot it alongside price and inventory.
 def calculate_pnl(self, current_price):
-    return self.cash + self .inventory & current_price
+    return self.cash + self.inventory * current_price
 def plot_results(self, price_path):
     pnl_path = []
     for price in price_path:
@@ -69,3 +67,9 @@ def plot_results(self, price_path):
 
 ## Step 5 — Inventory limits**
 ## Add a `max_inventory` parameter. If you're too long, stop bidding. Too short, stop offering. Run it and compare PnL to the version without limits.
+def max_inventory_check(self, price):
+    if self.inventory >= self.max_inventory:
+        return False # Stop bidding
+    elif self.inventory < -self.max_inventory:
+        return False # Stop offering 
+    return True # Continue quoting
