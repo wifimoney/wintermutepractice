@@ -4,7 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def generate_price_path(start_price=100, num_steps=1000, mu=0, sigma=1):
+def generate_price_path(start_price=100, num_steps=1000, mu=0, sigma=3):
     returns = np.random.normal(mu, sigma, num_steps)
     price_path = start_price + np.cumsum(returns)
     return price_path   
@@ -21,12 +21,12 @@ plt.show()
 ## Step 2 + 3 — MarketMaker class + Fill logic
 ## Give it three pieces of state: `inventory`, `cash`, and a list of `trades`. Then write a method that takes a mid price and returns a bid and an ask (just mid ± some fixed spread).
 class MarketMaker:
-    def __init__(self, spread=1):
-        self.inventory = 0
+    def __init__(self, spread=5):
+        self.inventory = 10
         self.cash = 0
         self.trades = []
         self.spread = spread
-        self.max_inventory = 10
+        self.max_inventory = 20
     def quote(self, mid_price):
             bid = mid_price - self.spread / 2
             ask = mid_price + self.spread / 2
