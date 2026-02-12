@@ -16,6 +16,8 @@
 # **Start with steps 1 and 2.** Write a function `black_scholes(S, K, T, r, sigma)` that returns call and put prices. Test it with S=100, K=100, T=1, r=0.05, sigma=0.2 — you should get a call price around $10.45.
 
 import numpy as np 
+import scipy.stats as stats
+
 from scipy.stats import norm
 def black_scholes(S, K, T, r, sigma):
     d1= (np.log(S/K) + (r + sigma**2 / 2) * T) / (sigma * np.sqrt(T)) 
@@ -32,3 +34,15 @@ r = 0.05
 sigma = 0.2
 call_price, put_price = black_scholes(S, K, T, r, sigma)
 print(f"Call Price: {call_price:.2f}, Put Price: {put_price:.2f}")
+
+# Calculating the Greeks
+def delta (S, K, T, r, sigma): 
+    d1 = (np.log(S/K) + (r + sigma**2 / 2) * T) / (sigma * np.sqrt(T))
+    return norm.cdf(d1)
+def vega(S, K, T, r, sigma): 
+    d1 = (np.log(S/K) + (r + sigma**2 / 2) * T) / (sigma * np.sqrt(T))
+    return S * norm.pdf(d1) * np.sqrt(T)
+
+delta_value = delta(S, K, T, r, sigma)
+vega_value = vega(S, K, T, r, sigma) 
+print(f"Delta: {delta_value:.4f}, Vega: {vega_value:.4f}")
