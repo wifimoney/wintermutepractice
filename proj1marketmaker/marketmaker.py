@@ -1,13 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def generate_price_path(start_price=100, num_steps=1000, mu=0, sigma=3):
+def generate_price_path(start_price=100, num_steps=1000, mu=0, sigma=0.5):
     returns = np.random.normal(mu, sigma, num_steps)
     price_path = start_price + np.cumsum(returns)
     return price_path
 
 class MarketMaker:
-    def __init__(self, spread=3, max_inventory=20):
+    def __init__(self, spread=1, max_inventory=20):
         self.inventory = 0
         self.cash = 0
         self.trades = []
