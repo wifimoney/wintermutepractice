@@ -17,6 +17,7 @@
 
 import numpy as np 
 import scipy.stats as stats
+import matplotlib.pyplot as plt
 
 from scipy.stats import norm
 def black_scholes(S, K, T, r, sigma):
@@ -46,3 +47,29 @@ def vega(S, K, T, r, sigma):
 delta_value = delta(S, K, T, r, sigma)
 vega_value = vega(S, K, T, r, sigma) 
 print(f"Delta: {delta_value:.4f}, Vega: {vega_value:.4f}")
+
+# Plotting how price changes as you vary each input
+S_values = np.linspace(50, 150, 100) 
+call_prices = [black_scholes(S, K, T, r, sigma)[0] for S in S_values] 
+for sig in [0.1, 0.2, 0.3]:
+    call_prices_sig = [black_scholes(S, K, T, r, sig)[0] for S in S_values] 
+    plt.plot(S_values, call_prices_sig, label=f'Volatility={sig}')
+plt.figure(figsize=(10, 6)) 
+plt.plot(S_values, call_prices, label='Call Price') 
+plt.title('Call Price vs Stock Price') 
+plt.xlabel('Stock Price (S)') 
+plt.ylabel('Call Price') 
+plt.legend() 
+plt.grid() 
+plt.show()
+
+T_values = np.linspace(0.01, 2, 100) 
+call_prices_T = [black_scholes(S, K, T, r, sigma)[0] for T in T_values] 
+plt.figure(figsize=(10, 6)) 
+plt.plot(T_values, call_prices_T, label='Call Price') 
+plt.title('Call Price vs Time to Expiry') 
+plt.xlabel('Time to Expiry (T)') 
+plt.ylabel('Call Price') 
+plt.legend() 
+plt.grid() 
+plt.show()
